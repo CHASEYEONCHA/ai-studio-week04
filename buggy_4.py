@@ -14,8 +14,22 @@ buggy_4.py  ―  총 매출액 집계 (에러 없이 '조용히' 틀리는 스�
 """
 import pandas as pd
 
+# FIXED: 데이터 점검
+"""데이터 점검"""
+# df = pd.read_csv("./week04/dirty_sales.csv", encoding="utf-8")
+# df["price"] = (df["price"].astype(str)
+#                               .str.replace(",", "")
+#                               .str.replace("원", "")
+#                               .str.strip())
+# df["price"] = pd.to_numeric(df["price"], errors="coerce")
+
+# print(" === dirty_sales.csv 파일 내용 === ")
+# print(df.shape) # (행 수, 열 수)
+# print(df.info()) # 열 이름, 타입, 결측 여부
+# print(df.describe())
+
 def main():
-    df = pd.read_csv("dirty_sales.csv", encoding="utf-8")
+    df = pd.read_csv("./week04/dirty_sales.csv", encoding="utf-8")
 
     # price를 숫자로 바꾼다 (빈 값은 NaN이 된다 — 그런데 그 규모를 확인하지 않았다)
     df["price"] = (df["price"].astype(str)
@@ -23,6 +37,21 @@ def main():
                               .str.replace("원", "")
                               .str.strip())
     df["price"] = pd.to_numeric(df["price"], errors="coerce")
+
+    print(df["price"].isna().sum()) # FIXED: NaN 값 규모 확인 / 2개 확인함.
+    print(df[df["price"].isna()]) # FIXED: NaN 행 데이터 확인
+    print(df[df["price"] < 0]) # FIXED: 음수값 확인 / 1개(-4500) 확인함.
+    print(df.sort_values("price").tail(5)) # FIXED: 최댓값 쪽 실제 행 확인 / 1개(9999999) 확인함.
+    print(df.sort_values("quantity").tail(5)) # FIXED: quantity의 최댓값 쪽 실제 행 확인 / 1개(9999999) 확인함.
+
+    # FIXED: 가격 결측치를 0으로 처리
+    df["price"] = df["price"].fillna(0)
+
+    # FIXED: 비정상적인 가격 데이터 제거
+    df = df[(df["price"] > 0) & (df["price"] != 9999999)]
+
+    # FIXED: 비정상적인 수량 데이터 제거
+    df = df[(df["quantity"] != 9999999)]
 
     # 매출액 = 단가 x 수량 (NaN이 섞이면 그 행의 매출액도 NaN)
     df["revenue"] = df["price"] * df["quantity"]
