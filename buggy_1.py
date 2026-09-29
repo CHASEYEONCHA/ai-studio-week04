@@ -22,7 +22,7 @@ df = pd.read_csv("./week04/dirty_sales.csv", encoding="utf-8")
 # print(df.isna().sum()) # 컬럼별 결측치 개수
 # print(df[df["price"].isna()].head()) # 결측이 있는 행 직접 눈으로 확인
 
-"""실행 결과"""
+"""실행 결과 요약"""
 # "price"의 non-null 개수: 2
 # "price"의 결측치 개수: 2
 # 결측이 있는 행:
@@ -37,7 +37,7 @@ def calc_total(path):
         for i, row in enumerate(reader):
 
             # FIXED: 데이터 점검 내용을 토대로 데이터 전처리 코드 작성
-            # 전처리 내용: 콤마, "원" 삭제, 결측치 NaN를 0으로 변환
+            # 전처리 내용: 콤마와 "원"을 제거하고, 빈 가격은 0으로 변환
             price = row["price"].replace(",", "").replace("원", "").strip()
             if price == "":
                 price = 0
