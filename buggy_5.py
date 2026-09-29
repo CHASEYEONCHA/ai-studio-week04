@@ -25,14 +25,14 @@ def load_prices(path):
 
 def find_big_jumps(prices, threshold=100000):
     jumps = []
-    for i in range(len(prices)):
+    for i in range(len(prices)-1): # FIXED: 마지막 인덱스에서 i + 1이 리스트 범위를 벗어나지 않도록 반복 범위를 수정함.
         diff = prices[i + 1] - prices[i]      # <-- 여기가 문제의 줄
         if abs(diff) >= threshold:
             jumps.append((i, prices[i], prices[i + 1], diff))
     return jumps
 
 if __name__ == "__main__":
-    prices = load_prices("dirty_sales.csv")
+    prices = load_prices("./week04/dirty_sales.csv")
     jumps = find_big_jumps(prices)
     print(f"급변 지점 {len(jumps)}건")
     for row in jumps[:10]:
