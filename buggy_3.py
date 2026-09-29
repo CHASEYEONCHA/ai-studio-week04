@@ -23,8 +23,10 @@ def load_and_clean(path):
     df["revenue"] = df["price"] * df["quantity"]
     # (여기서 정제된 df를 돌려주려고 했는데...)   <-- 무언가 빠져 있다
 
+    return df # FIXED: 정제된 df를 반환한다.
+
 def main():
-    df = load_and_clean("dirty_sales.csv")
+    df = load_and_clean("./week04/dirty_sales.csv")
     result = df.groupby("category")["revenue"].sum()   # <-- 여기서 죽는다
     print(result)
 
